@@ -92,7 +92,7 @@ echo "[1/4] - Cloning $REPO_URL into $REPO_NAME..."
 git clone $REPO_URL $REPO_NAME
 cd $REPO_NAME
 echo "[2/4] - Setting $KEY = $VALUE into $FILE_NAME..."
-yq e -i "$KEY = $VALUE" $FILE_NAME
+yq e -i "$KEY = \"$VALUE\"" $FILE_NAME
 echo "[3/4] - Commiting with $USER_NAME<$USER_EMAIL>..."
 git -c "user.name=$USER_NAME" -c "user.email=$USER_EMAIL" commit -am ":rocket: set $KEY to $VALUE in $FILE_NAME"
 echo "[4/4] - Pushing..."
