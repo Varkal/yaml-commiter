@@ -13,6 +13,16 @@ usage() {
   exit 2
 }
 
+push() {
+  echo "[4/4] - Pushing..."
+  STATUS=$(git push || echo "error")
+  while [ "$STATUS" == "error" ]; do
+    echo "Push failed, retrying..."
+    git pull --rebase
+    STATUS=$(git push || echo "error")
+  done
+}
+
 PARSED_ARGUMENTS=$(getopt -a -o u:n:k:v:f:U:E: --long url:,name:,key:,value:,file:,user:,email: -- "$@")
 VALID_ARGUMENTS=$?
 if [ "$VALID_ARGUMENTS" != "0" ]; then
@@ -95,5 +105,4 @@ echo "[2/4] - Setting $KEY = $VALUE into $FILE_NAME..."
 yq e -i "$KEY = \"$VALUE\"" $FILE_NAME
 echo "[3/4] - Commiting with $USER_NAME<$USER_EMAIL>..."
 git -c "user.name=$USER_NAME" -c "user.email=$USER_EMAIL" commit -am ":rocket: set $KEY to $VALUE in $FILE_NAME"
-echo "[4/4] - Pushing..."
-git push
+push;
